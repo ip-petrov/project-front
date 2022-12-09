@@ -8,11 +8,11 @@
 
 <h1>RPG admin panel</h1>
 <label for="count_1">Count for page</label>
-<select it="count_1" onchange="show_list(0)">
+<select id="count_1" onchange="show_list(0)">
     <option value="3">3</option>
-    <option value="3">5</option>
-    <option value="3">10</option>
-    <option value="3">20</option>
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="20">20</option>
 </select>
 <table id="table_1">
     <tr>
@@ -24,22 +24,26 @@
         <th>Level</th>
         <th>Birthday</th>
         <th>Banned</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
 </table>
 <div id="paging_buttons">Pages</div>
 <script>
     function show_list(page_number) {
-        $('tr:has(td)').remove();
+        $("tr:has(td)").remove();
+
         let url = "/rest/players?";
-        let countPerPage = $("count_1").val();
+
+        let countPerPage = $("#count_1").val();
         if (countPerPage == null) {
             countPerPage = 3;
         }
-        url.concat("pageSize=").concat(countPerPage);
+        url = url.concat("pageSize=").concat(countPerPage);
         if (page_number == null) {
             page_number = 0;
-        }35 мин
-        url.concat("&page_number=").concat(page_number);
+        }
+        url = url.concat("&pageNumber=").concat(page_number);
 
         $.get(url, function (response) {
             $.each(response, function (i, item) {
@@ -51,7 +55,15 @@
                     + item.profession + "</td><td>"
                     + item.level + "</td><td>"
                     + new Date(item.birthday).toLocaleDateString() + "</td><td>"
-                    + item.banned + "</td>"
+                    + item.banned + "</td><td>"
+                    + "<button id='button_edit_'" + item.id +"'>"
+                    + "<img src='/img/edit.png'>"
+                    + "</button>" + "</td><td>"
+                    + "<button id='button_delete_'" + item.id +"'>"
+                    + "<img src='/img/delete.png'>"
+                    + "</button>" + "</td>"
+
+
                 ).appendTo("#table_1")
             });
         });
@@ -68,6 +80,8 @@
             $('#paging_buttons').append(btn);
 
         }
+        let identifier = "#paging_button_"+page_number;
+        $(identifier).css('color', "red");
     }
 
     function getTotalCount() {
@@ -81,6 +95,10 @@
             }
         });
         return res;
+    }
+    function deleteAcc(id){
+        let url = "/rest/players/" + id;
+        $.ajax(url, )51 мин
     }
 </script>
 </body>
